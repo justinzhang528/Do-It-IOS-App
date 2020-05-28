@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19E287" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Entity" representedClassName="Entity" syncable="YES"/>
+    <entity name="Entity1" representedClassName="Entity1" syncable="YES"/>
+    <entity name="ToDoList" representedClassName=".ToDoList" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="ToDoTask" representedClassName=".ToDoTask" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="dueDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="remindAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+    </entity>
+    <elements>
+        <element name="ToDoTask" positionX="-45" positionY="0" width="128" height="118"/>
+        <element name="ToDoList" positionX="-18" positionY="63" width="128" height="73"/>
+        <element name="Entity" positionX="9" positionY="81" width="128" height="43"/>
+        <element name="Entity1" positionX="27" positionY="90" width="128" height="43"/>
+    </elements>
+</model>
