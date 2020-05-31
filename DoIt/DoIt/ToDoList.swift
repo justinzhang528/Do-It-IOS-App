@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public class ToDoTask:NSManagedObject, Identifiable {
+public class ToDoList:NSManagedObject, Identifiable {
     @NSManaged public var title:String?
     @NSManaged public var createdAt:Date?
     @NSManaged public var note:String?
@@ -17,10 +17,10 @@ public class ToDoTask:NSManagedObject, Identifiable {
     @NSManaged public var dueDate:Date?
 }
 
-extension ToDoTask {
-    static func getAlltoDoTasks() -> NSFetchRequest<ToDoTask> {
-        let request:NSFetchRequest<ToDoTask> = ToDoTask.fetchRequest() as!
-            NSFetchRequest<ToDoTask>
+extension ToDoList {
+    static func getAlltoDoTasks() -> NSFetchRequest<ToDoList> {
+        let request:NSFetchRequest<ToDoList> = ToDoList.fetchRequest() as!
+            NSFetchRequest<ToDoList>
         
         let sortDescriptor = NSSortDescriptor(key: "createdAt", ascending: true)
         
