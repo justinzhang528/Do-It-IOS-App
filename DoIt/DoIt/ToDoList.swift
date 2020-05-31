@@ -12,13 +12,11 @@ import CoreData
 public class ToDoList:NSManagedObject, Identifiable {
     @NSManaged public var title:String?
     @NSManaged public var createdAt:Date?
-    @NSManaged public var note:String?
-    @NSManaged public var remindAt:Date?
-    @NSManaged public var dueDate:Date?
+    @NSManaged public var tasks:[Task]
 }
 
 extension ToDoList {
-    static func getAlltoDoTasks() -> NSFetchRequest<ToDoList> {
+    static func getAlltoDoLists() -> NSFetchRequest<ToDoList> {
         let request:NSFetchRequest<ToDoList> = ToDoList.fetchRequest() as!
             NSFetchRequest<ToDoList>
         

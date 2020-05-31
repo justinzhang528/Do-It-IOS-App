@@ -9,13 +9,15 @@
 import SwiftUI
 
 struct CompletedTaskRow: View {
+    var task: Task
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-struct CompletedTaskRow_Previews: PreviewProvider {
-    static var previews: some View {
-        CompletedTaskRow()
+        HStack{
+            Image(systemName: "checkmark.circle.fill")
+            VStack(alignment: .leading){
+                Text(task.title!).font(.headline)
+                Text("Completed Time: " + CustomDateFormatter().Formatter(date: task.createdAt!, format: "yyyy-MM-dd' 'HH:mm:ss")).font(.caption)
+            }
+        }.foregroundColor(Color.black)
     }
 }

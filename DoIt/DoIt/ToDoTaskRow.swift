@@ -9,22 +9,21 @@
 import SwiftUI
 
 struct ToDoTaskRow: View {
-    var title:String = ""
-    var createdAt:String = ""
+    var task: Task
+    
+    @State var iconString = "circle"
     
     var body: some View {
-        HStack{
-            Image(systemName: "list.dash").resizable().fixedSize()
-            VStack(alignment: .leading){
-                Text(title).font(.headline)
-                Text(createdAt).font(.caption)
-            }
-        }
+        VStack(alignment: .leading){
+            Text(task.title!).font(.headline)
+            Text("Created At: " + CustomDateFormatter().Formatter(date: task.createdAt!, format: "yyyy-MM-dd' 'HH:mm:ss")).font(.caption)
+            Text("Note: " + task.note!).font(.caption)
+        }.foregroundColor(Color.black)
     }
 }
 
-struct ToDoTaskView_Previews: PreviewProvider {
+/*struct ToDoTaskView_Previews: PreviewProvider {
     static var previews: some View {
         ToDoTaskRow()
     }
-}
+}*/
