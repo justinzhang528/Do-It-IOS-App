@@ -8,14 +8,17 @@
 
 import SwiftUI
 
-struct Background: View {
+struct Background<Content: View>: View {
+    private var content: Content
+
+    init(@ViewBuilder content: @escaping () -> Content) {
+        self.content = content()
+    }
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Color.white
+        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        .overlay(content)
     }
 }
 
-struct Background_Previews: PreviewProvider {
-    static var previews: some View {
-        Background()
-    }
-}

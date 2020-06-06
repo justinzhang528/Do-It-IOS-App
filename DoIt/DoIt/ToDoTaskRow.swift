@@ -11,14 +11,35 @@ import SwiftUI
 struct ToDoTaskRow: View {
     var task: Task
     
-    @State var iconString = "circle"
+    @State private var scaleValue = CGFloat(1)
+    
     
     var body: some View {
-        VStack(alignment: .leading){
-            Text(task.title!).font(.headline)
-            Text("Created At: " + CustomDateFormatter().Formatter(date: task.createdAt!, format: "yyyy-MM-dd' 'HH:mm:ss")).font(.caption)
-            Text("Note: " + task.note!).font(.caption)
-        }.foregroundColor(Color.black)
+        HStack{
+            
+            NavigationLink(destination: TaskOptionView(task: self.task)){
+                VStack(alignment: .leading){
+                    Text(task.title!).font(.headline)
+                    Text("Note: " + task.note!).font(.caption)
+                }
+            }
+            
+            Spacer()
+            Image(systemName: task.isImportant ? "star.fill" : "star")
+                .resizable()
+                .frame(width: 25, height: 25)
+                .scaleEffect(self.scaleValue)
+                .onTouchGesture(
+                    touchBegan: {
+                        withAnimation { self.scaleValue = 1.5 }
+                        self.task.isImportant.toggle()
+                },
+                    touchEnd: { _ in withAnimation { self.scaleValue = 1.0 } }
+                    
+                )
+            
+        }
+        
     }
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17047E612485FF4F00F71291 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17047E602485FF4F00F71291 /* Background.swift */; };
 		171492B3247F8F0B00938304 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171492B2247F8F0B00938304 /* AppDelegate.swift */; };
 		171492B5247F8F0B00938304 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171492B4247F8F0B00938304 /* SceneDelegate.swift */; };
 		171492B8247F8F0B00938304 /* DoIt.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 171492B6247F8F0B00938304 /* DoIt.xcdatamodeld */; };
@@ -19,6 +20,10 @@
 		171492E6247F8F7700938304 /* ToDoList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171492E5247F8F7700938304 /* ToDoList.swift */; };
 		171492E8247F8FD500938304 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171492E7247F8FD500938304 /* ListView.swift */; };
 		171492EA247F9ADB00938304 /* ToDoListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171492E9247F9ADB00938304 /* ToDoListRow.swift */; };
+		176AA3A92488AFA600644C75 /* TouchGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176AA3A82488AFA600644C75 /* TouchGesture.swift */; };
+		178F5384248B4653008CF90D /* ImportantTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178F5383248B4653008CF90D /* ImportantTaskView.swift */; };
+		178F5386248B4A83008CF90D /* MyDayTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178F5385248B4A83008CF90D /* MyDayTaskView.swift */; };
+		178F5388248B4BC7008CF90D /* PlannedTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178F5387248B4BC7008CF90D /* PlannedTaskView.swift */; };
 		17B27CF424829CA3004BCED9 /* CompletedTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B27CF324829CA3004BCED9 /* CompletedTaskView.swift */; };
 		17B27CF624829E4A004BCED9 /* CompletedTaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B27CF524829E4A004BCED9 /* CompletedTaskRow.swift */; };
 		17B27CF824836A8E004BCED9 /* TextAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B27CF724836A8E004BCED9 /* TextAlert.swift */; };
@@ -27,6 +32,8 @@
 		17EEE9B624800E1300F63AB9 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EEE9B524800E1300F63AB9 /* Task.swift */; };
 		17F52A062481471900075BEC /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F52A052481471900075BEC /* TaskView.swift */; };
 		17F52A082481488500075BEC /* ToDoTaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F52A072481488500075BEC /* ToDoTaskRow.swift */; };
+		17FA34AD248B581C00D6D6D8 /* TaskOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FA34AC248B581C00D6D6D8 /* TaskOptionView.swift */; };
+		17FA34AF248BD33800D6D6D8 /* PlannedTaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FA34AE248BD33800D6D6D8 /* PlannedTaskRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +54,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		17047E602485FF4F00F71291 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		171492AF247F8F0B00938304 /* DoIt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DoIt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		171492B2247F8F0B00938304 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		171492B4247F8F0B00938304 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -65,6 +73,10 @@
 		171492E5247F8F7700938304 /* ToDoList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoList.swift; sourceTree = "<group>"; };
 		171492E7247F8FD500938304 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		171492E9247F9ADB00938304 /* ToDoListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListRow.swift; sourceTree = "<group>"; };
+		176AA3A82488AFA600644C75 /* TouchGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchGesture.swift; sourceTree = "<group>"; };
+		178F5383248B4653008CF90D /* ImportantTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportantTaskView.swift; sourceTree = "<group>"; };
+		178F5385248B4A83008CF90D /* MyDayTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDayTaskView.swift; sourceTree = "<group>"; };
+		178F5387248B4BC7008CF90D /* PlannedTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannedTaskView.swift; sourceTree = "<group>"; };
 		17B27CF324829CA3004BCED9 /* CompletedTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTaskView.swift; sourceTree = "<group>"; };
 		17B27CF524829E4A004BCED9 /* CompletedTaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTaskRow.swift; sourceTree = "<group>"; };
 		17B27CF724836A8E004BCED9 /* TextAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAlert.swift; sourceTree = "<group>"; };
@@ -73,6 +85,8 @@
 		17EEE9B524800E1300F63AB9 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		17F52A052481471900075BEC /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
 		17F52A072481488500075BEC /* ToDoTaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTaskRow.swift; sourceTree = "<group>"; };
+		17FA34AC248B581C00D6D6D8 /* TaskOptionView.swift */ = {isa = PBXFileReference; indentWidth = 3; lastKnownFileType = sourcecode.swift; path = TaskOptionView.swift; sourceTree = "<group>"; };
+		17FA34AE248BD33800D6D6D8 /* PlannedTaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannedTaskRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,12 +141,19 @@
 				171492B4247F8F0B00938304 /* SceneDelegate.swift */,
 				171492B9247F8F0B00938304 /* ContentView.swift */,
 				17E7F7782481FDF900F5F42E /* CustomDateFormatter.swift */,
-				171492E7247F8FD500938304 /* ListView.swift */,
+				17047E602485FF4F00F71291 /* Background.swift */,
 				17B27CF724836A8E004BCED9 /* TextAlert.swift */,
+				176AA3A82488AFA600644C75 /* TouchGesture.swift */,
+				171492E7247F8FD500938304 /* ListView.swift */,
 				17F52A052481471900075BEC /* TaskView.swift */,
+				178F5385248B4A83008CF90D /* MyDayTaskView.swift */,
+				17FA34AC248B581C00D6D6D8 /* TaskOptionView.swift */,
+				178F5387248B4BC7008CF90D /* PlannedTaskView.swift */,
+				178F5383248B4653008CF90D /* ImportantTaskView.swift */,
 				17B27CF324829CA3004BCED9 /* CompletedTaskView.swift */,
 				17E7F77A24825EBA00F5F42E /* MultilineTextView.swift */,
 				17F52A072481488500075BEC /* ToDoTaskRow.swift */,
+				17FA34AE248BD33800D6D6D8 /* PlannedTaskRow.swift */,
 				17B27CF524829E4A004BCED9 /* CompletedTaskRow.swift */,
 				171492E9247F9ADB00938304 /* ToDoListRow.swift */,
 				171492E5247F8F7700938304 /* ToDoList.swift */,
@@ -303,19 +324,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17FA34AF248BD33800D6D6D8 /* PlannedTaskRow.swift in Sources */,
+				178F5388248B4BC7008CF90D /* PlannedTaskView.swift in Sources */,
 				17F52A062481471900075BEC /* TaskView.swift in Sources */,
 				17E7F77B24825EBB00F5F42E /* MultilineTextView.swift in Sources */,
+				178F5384248B4653008CF90D /* ImportantTaskView.swift in Sources */,
 				17EEE9B624800E1300F63AB9 /* Task.swift in Sources */,
+				17047E612485FF4F00F71291 /* Background.swift in Sources */,
 				171492B8247F8F0B00938304 /* DoIt.xcdatamodeld in Sources */,
 				171492B3247F8F0B00938304 /* AppDelegate.swift in Sources */,
+				178F5386248B4A83008CF90D /* MyDayTaskView.swift in Sources */,
 				171492E8247F8FD500938304 /* ListView.swift in Sources */,
 				17B27CF824836A8E004BCED9 /* TextAlert.swift in Sources */,
+				17FA34AD248B581C00D6D6D8 /* TaskOptionView.swift in Sources */,
 				171492E6247F8F7700938304 /* ToDoList.swift in Sources */,
 				17B27CF624829E4A004BCED9 /* CompletedTaskRow.swift in Sources */,
 				171492BA247F8F0B00938304 /* ContentView.swift in Sources */,
 				17B27CF424829CA3004BCED9 /* CompletedTaskView.swift in Sources */,
 				171492B5247F8F0B00938304 /* SceneDelegate.swift in Sources */,
 				171492EA247F9ADB00938304 /* ToDoListRow.swift in Sources */,
+				176AA3A92488AFA600644C75 /* TouchGesture.swift in Sources */,
 				17E7F7792481FDF900F5F42E /* CustomDateFormatter.swift in Sources */,
 				17F52A082481488500075BEC /* ToDoTaskRow.swift in Sources */,
 			);

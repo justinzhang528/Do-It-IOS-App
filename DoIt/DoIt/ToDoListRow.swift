@@ -16,15 +16,14 @@ struct ToDoListRow: View {
     
     var body: some View {
         HStack{
-            NavigationLink(destination: TaskView(listIndex: id!, navigationTitle: title!, color: Color(#colorLiteral(red: 0.6210807562, green: 0.9000057578, blue: 0.9218967557, alpha: 1)))){
+            NavigationLink(destination: TaskView(listIndex: id!, navigationTitle: title!)){
                 Image(systemName: "list.dash").resizable().fixedSize()
                 VStack(alignment: .leading){
                     Text(title!).font(.headline)
-                    Text(createdAt!).font(.caption)
                     Text(taskCount!).font(.caption)
+                }
             }
-            }
-        }.foregroundColor(Color.black)
+        }
     }
 }
 
