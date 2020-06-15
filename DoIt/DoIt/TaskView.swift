@@ -12,6 +12,7 @@ struct TaskView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(fetchRequest: ToDoList.getAlltoDoLists()) var toDoLists: FetchedResults<ToDoList>
+    @FetchRequest(fetchRequest: LocalNotificationManager.getAllNotifications()) var notifications: FetchedResults<LocalNotificationManager>
     
     var listIndex: Int = 0
     var navigationTitle: String = ""
@@ -27,6 +28,7 @@ struct TaskView: View {
     @State private var value : CGFloat = 0
     @State private var actionSheetButtons : [ActionSheet.Button] = [ActionSheet.Button]()
     
+
     
     //設定慾刪除之index
     func SetDeleteIndex(at index: IndexSet)
@@ -44,6 +46,8 @@ struct TaskView: View {
         }catch{
             print(error)
         }
+        
+        self.UpdateNotificationSchedule()
     }
     
     func moveTask(task: Task, listIndex: Int) {
@@ -64,11 +68,13 @@ struct TaskView: View {
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil )
         
         let saveAction = UIAlertAction(title: "Save", style: .default, handler: { alert -> Void in
-
+            
             self.toDoLists[self.listIndex].tasks[self.deleteIndex].title = alertController.textFields![0].text
             let task = self.toDoLists[self.listIndex].tasks[self.deleteIndex]
             self.delete()
             self.toDoLists[self.listIndex].tasks.append(task)
+
+            self.UpdateNotificationSchedule()
         })
 
 
@@ -79,12 +85,30 @@ struct TaskView: View {
 
     }
     
+    func UpdateNotificationSchedule(){
+       notifications[0].cancelAllNotifications()
+       for list in toDoLists {
+          for task in toDoLists[toDoLists.firstIndex(of: list)!].tasks {
+             if (task.isRemind && !task.isCompleted && task.remindAt! > Date()) {
+                notifications[0].addNotification(task: task)
+                notifications[0].scheduleNotifications()
+             }
+          }
+       }
+    }
+    
     
     var body: some View {
         
         NavigationView {
             
             ZStack {
+                
+                GeometryReader { geo in
+                    Image("task")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                }
                 
                 VStack {
                     
@@ -105,10 +129,12 @@ struct TaskView: View {
                                             //根據listview決定actionsheet button的內容
                                             let buttons = [
                                                 ActionSheet.Button.default(Text("Add to My Day"), action: {
-                                                    self.moveTask(task: index, listIndex: 0)
+                                                    index.dueDate = Date()
                                                 }),
                                                 ActionSheet.Button.default(Text("Mark as Completed"), action: {
+                                                    index.isCompleted = true
                                                     self.moveTask(task: index, listIndex: 3)
+                                                    self.UpdateNotificationSchedule()
                                                 }),
                                                 ActionSheet.Button.default(Text("Rename"), action: {
                                                     self.renameDialog()
@@ -123,7 +149,7 @@ struct TaskView: View {
                                             //根據listview決定actionsheet button的內容
                                             
                                         }
-                                        ToDoTaskRow(task: index)
+                                        ToDoTaskRow(task: index, title: index.title!, note: index.note!)
                                         
                                     }
                                     .actionSheet(isPresented: self.$showActionSheet) { () -> ActionSheet in
@@ -166,7 +192,8 @@ struct TaskView: View {
                                     self.isShowTextField = false
                                     self.isShowFloatingButton = true
                                     if (self.newToDoTask != ""){
-                                        self.toDoLists[self.listIndex].tasks.append(Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: Date(), dueDate: Date()))
+                                        let dateComponents = DateComponents(calendar: Calendar.current, year: 2000, month: 1, day: 1)
+                                        self.toDoLists[self.listIndex].tasks.append(Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: dateComponents.date!, dueDate: dateComponents.date!))
                                         
                                         self.newToDoTask = ""
                                         self.newNote = ""
@@ -234,7 +261,6 @@ struct TaskView: View {
                         let value = noti.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
                         let height = value.height
                         self.value = height
-                        self.isShowTextField = true
                         self.isShowFloatingButton = false
                     }
                     

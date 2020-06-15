@@ -17,7 +17,6 @@ struct ToDoListRow: View {
     var body: some View {
         HStack{
             NavigationLink(destination: TaskView(listIndex: id!, navigationTitle: title!)){
-                Image(systemName: "list.dash").resizable().fixedSize()
                 VStack(alignment: .leading){
                     Text(title!).font(.headline)
                     Text(taskCount!).font(.caption)

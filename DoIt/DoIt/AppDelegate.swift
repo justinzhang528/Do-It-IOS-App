@@ -10,12 +10,32 @@ import UIKit
 import CoreData
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
-
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions)
+        -> Void) {
+        completionHandler([.alert, .badge, .sound])
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        UNUserNotificationCenter.current().delegate = self
+        
+        UITableView.appearance().backgroundColor = .clear
+        UITableViewCell.appearance().backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
+        UITableView.appearance().tableFooterView = UIView()
+        UITabBar.appearance().backgroundImage = UIImage()
+        UITabBar.appearance().shadowImage = UIImage()
+        UITabBar.appearance().backgroundColor = .clear
+        /*let barAppearance =  UINavigationBarAppearance()
+        barAppearance.configureWithTransparentBackground()
+        UINavigationBar.appearance().standardAppearance = barAppearance
+        UINavigationBar.appearance().isHidden = true*/
+        UITableViewHeaderFooterView.appearance().tintColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 0.5)
+        
         return true
     }
 

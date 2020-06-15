@@ -12,6 +12,7 @@ struct PlannedTaskView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(fetchRequest: ToDoList.getAlltoDoLists()) var toDoLists: FetchedResults<ToDoList>
+    @FetchRequest(fetchRequest: LocalNotificationManager.getAllNotifications()) var notifications: FetchedResults<LocalNotificationManager>
     
     @State var listIndex: Int = 0
     var navigationTitle: String = ""
@@ -27,6 +28,7 @@ struct PlannedTaskView: View {
     @State private var value : CGFloat = 0
     @State private var actionSheetButtons : [ActionSheet.Button] = [ActionSheet.Button]()
     
+
     
     //設定慾刪除之index
     func SetDeleteIndex(at index: IndexSet)
@@ -44,6 +46,8 @@ struct PlannedTaskView: View {
         }catch{
             print(error)
         }
+        
+        self.UpdateNotificationSchedule()
     }
     
     func moveTask(task: Task, listIndex: Int) {
@@ -69,6 +73,8 @@ struct PlannedTaskView: View {
             let task = self.toDoLists[self.listIndex].tasks[self.deleteIndex]
             self.delete()
             self.toDoLists[self.listIndex].tasks.append(task)
+
+            self.UpdateNotificationSchedule()
         })
 
 
@@ -79,6 +85,18 @@ struct PlannedTaskView: View {
 
     }
     
+    func UpdateNotificationSchedule(){
+       notifications[0].cancelAllNotifications()
+       for list in toDoLists {
+          for task in toDoLists[toDoLists.firstIndex(of: list)!].tasks {
+             if (task.isRemind && !task.isCompleted && task.remindAt! > Date()) {
+                notifications[0].addNotification(task: task)
+                notifications[0].scheduleNotifications()
+             }
+          }
+       }
+    }
+    
     
     var body: some View {
         
@@ -86,52 +104,66 @@ struct PlannedTaskView: View {
             
             ZStack {
                 
+                GeometryReader { geo in
+                    Image("Planned")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                }
+                
                 VStack {
                     
                     List {
                         Section(header: Text("Added Tasks")) {
                             ForEach(self.toDoLists, id: \.self) { number in
                                 ForEach(self.toDoLists[self.toDoLists.firstIndex(of: number)!].tasks, id: \.self) { index in
-                                    HStack{
-                                        if(index.dueDate! > Date() || index.isRemind)
+                                    Group {
+                                        
+                                        if((CustomDateFormatter().Formatter(date: index.dueDate!, format: "yyyy-MM-dd") != "2000-01-01" || index.isRemind) && self.toDoLists.firstIndex(of: number)! != 3)
                                         {
-                                            Image(systemName: "circle")
-                                            .resizable()
-                                            .frame(width: 25, height: 25)
-                                            .onTapGesture {
-                                                self.deleteIndex = self.toDoLists[self.toDoLists.firstIndex(of: number)!].tasks.firstIndex(of: index)!
-                                                self.listIndex = self.toDoLists.firstIndex(of: number)!
-                                                self.renameString = index.title!
-                                                self.showActionSheet.toggle()
+                                            HStack{
                                                 
-                                                //根據listview決定actionsheet button的內容
-                                                let buttons = [
-                                                    ActionSheet.Button.default(Text("Add to My Day"), action: {
-                                                        self.moveTask(task: index, listIndex: 0)
-                                                    }),
-                                                    ActionSheet.Button.default(Text("Mark as Completed"), action: {
-                                                        self.moveTask(task: index, listIndex: 3)
-                                                    }),
-                                                    ActionSheet.Button.default(Text("Rename"), action: {
-                                                        self.renameDialog()
-                                                    }),
-                                                    ActionSheet.Button.cancel()
-                                                ]
-                                                
-                                                self.actionSheetButtons.removeAll()
-                                                for i in 0...3 {
-                                                    self.actionSheetButtons.append(buttons[i])
+                                                Image(systemName: "circle")
+                                                .resizable()
+                                                .frame(width: 25, height: 25)
+                                                .onTapGesture {
+                                                    self.deleteIndex = self.toDoLists[self.toDoLists.firstIndex(of: number)!].tasks.firstIndex(of: index)!
+                                                    self.listIndex = self.toDoLists.firstIndex(of: number)!
+                                                    self.renameString = index.title!
+                                                    self.showActionSheet.toggle()
+                                                    
+                                                    //根據listview決定actionsheet button的內容
+                                                    let buttons = [
+                                                        ActionSheet.Button.default(Text("Add to My Day"), action: {
+                                                            index.dueDate = Date()
+                                                        }),
+                                                        ActionSheet.Button.default(Text("Mark as Completed"), action: {
+                                                            index.isCompleted = true
+                                                            self.moveTask(task: index, listIndex: 3)
+                                                            self.UpdateNotificationSchedule()
+                                                        }),
+                                                        ActionSheet.Button.default(Text("Rename"), action: {
+                                                            self.renameDialog()
+                                                        }),
+                                                        ActionSheet.Button.cancel()
+                                                    ]
+                                                    
+                                                    self.actionSheetButtons.removeAll()
+                                                    for i in 0...3 {
+                                                        self.actionSheetButtons.append(buttons[i])
+                                                    }
+                                                    //根據listview決定actionsheet button的內容
+                                                    
                                                 }
-                                                //根據listview決定actionsheet button的內容
+                                                PlannedTaskRow(task: index, title: index.title!, note: index.note!, isRemind: index.isRemind, remindAt: index.remindAt!, dueDate: index.dueDate!)
                                                 
                                             }
-                                            PlannedTaskRow(task: index)
+                                            .actionSheet(isPresented: self.$showActionSheet) { () -> ActionSheet in
+                                                ActionSheet(title: Text("Choose Action"), buttons: self.actionSheetButtons)
+                                            }
                                         }
                                         
                                     }
-                                    .actionSheet(isPresented: self.$showActionSheet) { () -> ActionSheet in
-                                        ActionSheet(title: Text("Choose Action"), buttons: self.actionSheetButtons)
-                                    }
+                                    
                                 }.onDelete { indexSet in
                                     self.listIndex = self.toDoLists.firstIndex(of: number)!
                                         self.SetDeleteIndex(at: indexSet) //點擊刪除時的動作
@@ -169,7 +201,8 @@ struct PlannedTaskView: View {
                                     self.isShowTextField = false
                                     self.isShowFloatingButton = true
                                     if (self.newToDoTask != ""){
-                                        self.toDoLists[2].tasks.append(Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: Date(), dueDate: Date()))
+                                        let task = Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: Date(), dueDate: Date())
+                                        self.toDoLists[1].tasks.append(task)
                                         
                                         self.newToDoTask = ""
                                         self.newNote = ""
@@ -237,7 +270,6 @@ struct PlannedTaskView: View {
                         let value = noti.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
                         let height = value.height
                         self.value = height
-                        self.isShowTextField = true
                         self.isShowFloatingButton = false
                     }
                     

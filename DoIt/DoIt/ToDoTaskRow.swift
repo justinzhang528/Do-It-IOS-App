@@ -9,8 +9,12 @@
 import SwiftUI
 
 struct ToDoTaskRow: View {
-    var task: Task
+    @Environment(\.managedObjectContext) var managedObjectContext
+    @FetchRequest(fetchRequest: ToDoList.getAlltoDoLists()) var toDoLists: FetchedResults<ToDoList>
     
+    var task: Task
+    @State var title: String
+    @State var note: String
     @State private var scaleValue = CGFloat(1)
     
     
@@ -33,6 +37,11 @@ struct ToDoTaskRow: View {
                     touchBegan: {
                         withAnimation { self.scaleValue = 1.5 }
                         self.task.isImportant.toggle()
+                        do{
+                            try self.managedObjectContext.save()
+                        }catch{
+                            print(error)
+                        }
                 },
                     touchEnd: { _ in withAnimation { self.scaleValue = 1.0 } }
                     
