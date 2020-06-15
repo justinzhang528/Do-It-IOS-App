@@ -25,13 +25,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let window = UIWindow(windowScene: windowScene)
             
                     // Get the managed object context from the shared persistent container.
-            let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+            //let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
             // Create the SwiftUI view and set the context as the value for the managedObjectContext environment keyPath.
             // Add `@Environment(\.managedObjectContext)` in the views that will need the context.
-            let listView = ListView().environment(\.managedObjectContext, managedObjectContext)
-
-            window.rootViewController = UIHostingController(rootView: listView)
+            //let listView = ListView().environment(\.managedObjectContext, managedObjectContext)
+            let splashView = SplashView()
+            window.rootViewController = UIHostingController(rootView: splashView)
             self.window = window
             window.makeKeyAndVisible()
         }

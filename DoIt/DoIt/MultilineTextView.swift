@@ -18,6 +18,7 @@ struct MultilineTextView: UIViewRepresentable {
         view.isScrollEnabled = true
         view.isEditable = true
         view.isUserInteractionEnabled = true
+        view.backgroundColor = UIColor.clear
 
         return view
     }

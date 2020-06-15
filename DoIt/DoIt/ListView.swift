@@ -7,22 +7,30 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 struct ListView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(fetchRequest: ToDoList.getAlltoDoLists()) var toDoLists: FetchedResults<ToDoList>
+    @FetchRequest(fetchRequest: LocalNotificationManager.getAllNotifications()) var notifications: FetchedResults<LocalNotificationManager>
     
     @State private var deleteIndex = 0
     @State private var isShowConfirm = false
+    @State private var showActionSheet = false
     @State private var isShowTextField = false
     @State private var isShowFloatingButton = true
     @State private var newToDoList = ""
+    @State private var renameString = ""
     @State private var value : CGFloat = 0
+    @State private var notiAlert = false
+    @State private var actionSheetButtons : [ActionSheet.Button] = [ActionSheet.Button]()
     
-    
-    
-    func initizeList(){
+     
+    func initializeList(){        
+        //新增notification到coreData
+        let notification = LocalNotificationManager(context: self.managedObjectContext)
+        notification.createdAt = Date()
         let myDayList = ToDoList(context: self.managedObjectContext)
         myDayList.title = "My Day"
         myDayList.createdAt = Date()
@@ -59,6 +67,43 @@ struct ListView: View {
         }catch{
             print(error)
         }
+        
+        self.UpdateNotificationSchedule()
+    }
+    
+    func renameDialog(){
+
+        let alertController = UIAlertController(title: "Rename", message: self.renameString, preferredStyle: .alert)
+
+        alertController.addTextField { (textField : UITextField!) -> Void in
+            textField.placeholder = "Type here"
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil )
+        
+        let saveAction = UIAlertAction(title: "Save", style: .default, handler: { alert -> Void in
+            
+            self.toDoLists[self.deleteIndex].title = alertController.textFields![0].text
+        })
+
+
+        alertController.addAction(saveAction)
+        alertController.addAction(cancelAction)
+
+        UIApplication.shared.windows.first?.rootViewController?.present(alertController, animated: true, completion: nil)
+
+    }
+    
+    func UpdateNotificationSchedule(){
+       notifications[0].cancelAllNotifications()
+       for list in toDoLists {
+          for task in toDoLists[toDoLists.firstIndex(of: list)!].tasks {
+             if (task.isRemind && !task.isCompleted && task.remindAt! > Date()) {
+                notifications[0].addNotification(task: task)
+                notifications[0].scheduleNotifications()
+             }
+          }
+       }
     }
 
     
@@ -67,6 +112,12 @@ struct ListView: View {
         NavigationView {
             
             ZStack {
+                
+                GeometryReader { geo in
+                    Image("task")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                }
                 
                 VStack {
                         
@@ -80,10 +131,9 @@ struct ListView: View {
                                 HStack {
                                     Text("My Day").font(.headline)
                                     Spacer()
-                                    Text("\(toDoLists.count)").font(.caption)
-                                    if(toDoLists.count > 0) {
-                                        Text("\(toDoLists[0].tasks.count)").font(.caption)
-                                    }
+                                    /*if (notifications.count > 0){
+                                        Text("Notification: \(notifications[0].notifications.count)").font(.caption)
+                                    }*/
                                 }
                                 Spacer()
                             }
@@ -99,10 +149,6 @@ struct ListView: View {
                                 .foregroundColor(Color(#colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)))
                                 HStack {
                                     Text("Important").font(.headline)
-                                    Spacer()
-                                    if(toDoLists.count > 1) {
-                                        Text("\(toDoLists[1].tasks.count)").font(.caption)
-                                    }
                                 }
                                 Spacer()
                             }
@@ -118,10 +164,6 @@ struct ListView: View {
                                 .foregroundColor(Color.blue)
                                 HStack {
                                     Text("Planned").font(.headline)
-                                    Spacer()
-                                    if(toDoLists.count > 2) {
-                                        Text("\(toDoLists[2].tasks.count)").font(.caption)
-                                    }
                                 }
                                 Spacer()
                             }
@@ -138,9 +180,6 @@ struct ListView: View {
                                 HStack {
                                     Text("Completed").font(.headline)
                                     Spacer()
-                                    if(toDoLists.count > 3) {
-                                        Text("\(toDoLists[3].tasks.count)").font(.caption)
-                                    }
                                 }
                                 Spacer()
                             }
@@ -153,7 +192,35 @@ struct ListView: View {
                                     
                                     //不顯示前四個DefaultList
                                     if(self.toDoLists.firstIndex(of: list)! > 3){
-                                        ToDoListRow(title: list.title!, createdAt: "Created At: " + CustomDateFormatter().Formatter(date: list.createdAt!, format: "yyyy-MM-dd' 'HH:mm:ss"), taskCount: "Task count: \(list.tasks.count)", id: self.toDoLists.firstIndex(of: list))
+                                        HStack {
+                                            Image(systemName: "list.dash")
+                                            .resizable()
+                                            .frame(width: 30, height: 20)
+                                            .onTapGesture {
+                                                self.deleteIndex = self.toDoLists.firstIndex(of: list)!
+                                                self.renameString = list.title!
+                                                self.showActionSheet.toggle()
+                                                
+                                                //根據listview決定actionsheet button的內容
+                                                let buttons = [
+                                                    ActionSheet.Button.default(Text("Rename"), action: {
+                                                        self.renameDialog()
+                                                    }),
+                                                    ActionSheet.Button.cancel()
+                                                ]
+                                                
+                                                self.actionSheetButtons.removeAll()
+                                                for i in 0...1 {
+                                                    self.actionSheetButtons.append(buttons[i])
+                                                }
+                                                //根據listview決定actionsheet button的內容
+                                            }
+
+                                            ToDoListRow(title: list.title!, createdAt: "Created At: " + CustomDateFormatter().Formatter(date: list.createdAt!, format: "yyyy-MM-dd' 'HH:mm:ss"), taskCount: "Task count: \(list.tasks.count)", id: self.toDoLists.firstIndex(of: list))
+                                            
+                                            }.actionSheet(isPresented: self.$showActionSheet) { () -> ActionSheet in
+                                                ActionSheet(title: Text("Choose Action"), buttons: self.actionSheetButtons)
+                                            }
                                         }
                                     
                                     }.onDelete { indexSet in
@@ -240,7 +307,7 @@ struct ListView: View {
                 //檢查是否有新增過defautList
                 .onAppear(perform: {
                     if(self.toDoLists.count == 0){
-                        self.initizeList()
+                        self.initializeList()
                     }})
             
                 //處理鍵盤彈出時view往上移動
@@ -253,7 +320,6 @@ struct ListView: View {
                                 return
                             }
                             self.value = value.height
-                            self.isShowTextField = true
                             self.isShowFloatingButton = false
                         }
                         
@@ -262,8 +328,20 @@ struct ListView: View {
                             self.isShowTextField = false
                             self.isShowFloatingButton = true
                         }
-                }
-                //處理鍵盤彈出時view往上移動
+                        //處理鍵盤彈出時view往上移動
+                        
+                        //notification權限要求
+                        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]){ (status, _) in
+                            if (status){
+                                return
+                            }
+                            self.notiAlert.toggle()
+                        }
+                        
+                        
+                }.alert(isPresented: $notiAlert){
+                    return Alert(title: Text("Please Enable Notification Access in Setting"))
+                    }
                 
         }
             
@@ -277,3 +355,4 @@ struct ListView_Previews: PreviewProvider {
         ListView()
     }
 }
+
