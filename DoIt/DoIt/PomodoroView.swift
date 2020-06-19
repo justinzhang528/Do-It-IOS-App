@@ -9,8 +9,27 @@
 import SwiftUI
 
 struct PomodoroView: View {
+    @EnvironmentObject var timerState: TimerState
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView{
+            VStack(spacing: 100.0){
+                PomodoroCircleView()
+                HStack(spacing:50.0){
+                    if timerState.sessionStart == nil{
+                        StartButton()
+                    }else{
+                        //PauseButton()
+                        StopButton()
+                        //RestartButton()
+                    }
+                    
+                }
+                
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.white)
+            .edgesIgnoringSafeArea(.all)
+        }
     }
 }
 
