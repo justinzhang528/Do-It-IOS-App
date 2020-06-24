@@ -12,7 +12,7 @@ import CoreData
 public class ToDoList:NSManagedObject, Identifiable {
     @NSManaged public var title:String?
     @NSManaged public var createdAt:Date?
-    @NSManaged public var tasks:[Task]
+    @NSManaged public var tasks: [Task]
 }
 
 extension ToDoList {

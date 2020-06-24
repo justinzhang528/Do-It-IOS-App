@@ -98,7 +98,7 @@ struct ListView: View {
        notifications[0].cancelAllNotifications()
        for list in toDoLists {
           for task in toDoLists[toDoLists.firstIndex(of: list)!].tasks {
-             if (task.isRemind && !task.isCompleted && task.remindAt! > Date()) {
+            if (task.isRemind! && !task.isCompleted! && task.remindAt! > Date()) {
                 notifications[0].addNotification(task: task)
                 notifications[0].scheduleNotifications()
              }

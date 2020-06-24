@@ -89,7 +89,7 @@ struct PlannedTaskView: View {
        notifications[0].cancelAllNotifications()
        for list in toDoLists {
           for task in toDoLists[toDoLists.firstIndex(of: list)!].tasks {
-             if (task.isRemind && !task.isCompleted && task.remindAt! > Date()) {
+            if (task.isRemind! && !task.isCompleted! && task.remindAt! > Date()) {
                 notifications[0].addNotification(task: task)
                 notifications[0].scheduleNotifications()
              }
@@ -118,7 +118,7 @@ struct PlannedTaskView: View {
                                 ForEach(self.toDoLists[self.toDoLists.firstIndex(of: number)!].tasks, id: \.self) { index in
                                     Group {
                                         
-                                        if((CustomDateFormatter().Formatter(date: index.dueDate!, format: "yyyy-MM-dd") != "2000-01-01" || index.isRemind) && self.toDoLists.firstIndex(of: number)! != 3)
+                                        if((CustomDateFormatter().Formatter(date: index.dueDate!, format: "yyyy-MM-dd") != "2000-01-01") && self.toDoLists.firstIndex(of: number)! != 3)
                                         {
                                             HStack{
                                                 
@@ -154,7 +154,7 @@ struct PlannedTaskView: View {
                                                     //根據listview決定actionsheet button的內容
                                                     
                                                 }
-                                                PlannedTaskRow(task: index, title: index.title!, note: index.note!, isRemind: index.isRemind, remindAt: index.remindAt!, dueDate: index.dueDate!)
+                                                PlannedTaskRow(task: index, listIndex: 2, taskIndex: self.toDoLists[self.toDoLists.firstIndex(of: number)!].tasks.firstIndex(of: index)!, title: index.title!, note: index.note!, isRemind: index.isRemind!, remindAt: index.remindAt!, dueDate: index.dueDate!)
                                                 
                                             }
                                             .actionSheet(isPresented: self.$showActionSheet) { () -> ActionSheet in
@@ -201,8 +201,14 @@ struct PlannedTaskView: View {
                                     self.isShowTextField = false
                                     self.isShowFloatingButton = true
                                     if (self.newToDoTask != ""){
-                                        let task = Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: Date(), dueDate: Date())
+                                        let task = Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: Date(), dueDate: Date(), isImportant: false, isRemind: false, isCompleted: false)
                                         self.toDoLists[1].tasks.append(task)
+                                        
+                                        do {
+                                            try self.managedObjectContext.save()
+                                        }catch{
+                                            print(error)
+                                        }
                                         
                                         self.newToDoTask = ""
                                         self.newNote = ""

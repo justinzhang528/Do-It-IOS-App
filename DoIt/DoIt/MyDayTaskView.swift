@@ -89,7 +89,7 @@ struct MyDayTaskView: View {
        notifications[0].cancelAllNotifications()
        for list in toDoLists {
           for task in toDoLists[toDoLists.firstIndex(of: list)!].tasks {
-             if (task.isRemind && !task.isCompleted && task.remindAt! > Date()) {
+            if (task.isRemind! && !task.isCompleted! && task.remindAt! > Date()) {
                 notifications[0].addNotification(task: task)
                 notifications[0].scheduleNotifications()
              }
@@ -163,7 +163,7 @@ struct MyDayTaskView: View {
                                                     //根據listview決定actionsheet button的內容
                                                     
                                                 }
-                                                ToDoTaskRow(task: index, title: index.title!, note: index.note!)
+                                                ToDoTaskRow(task: index, listIndex: 0, taskIndex: self.toDoLists[self.toDoLists.firstIndex(of: number)!].tasks.firstIndex(of: index)!, title: index.title!, note: index.note!)
                                                 
                                                 
                                             }
@@ -211,7 +211,13 @@ struct MyDayTaskView: View {
                                     self.isShowTextField = false
                                     self.isShowFloatingButton = true
                                     if (self.newToDoTask != ""){
-                                        self.toDoLists[0].tasks.append(Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: Date(), dueDate: Date()))
+                                        self.toDoLists[0].tasks.append(Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: Date(), dueDate: Date(), isImportant: false, isRemind: false, isCompleted: false))
+                                        
+                                        do {
+                                            try self.managedObjectContext.save()
+                                        }catch{
+                                            print(error)
+                                        }
                                                                                 
                                         self.newToDoTask = ""
                                         self.newNote = ""

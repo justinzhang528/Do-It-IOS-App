@@ -13,6 +13,8 @@ struct ToDoTaskRow: View {
     @FetchRequest(fetchRequest: ToDoList.getAlltoDoLists()) var toDoLists: FetchedResults<ToDoList>
     
     var task: Task
+    var listIndex: Int
+    var taskIndex: Int
     @State var title: String
     @State var note: String
     @State private var scaleValue = CGFloat(1)
@@ -29,21 +31,24 @@ struct ToDoTaskRow: View {
             }
             
             Spacer()
-            Image(systemName: task.isImportant ? "star.fill" : "star")
+            Image(systemName: task.isImportant! ? "star.fill" : "star")
                 .resizable()
                 .frame(width: 25, height: 25)
                 .scaleEffect(self.scaleValue)
                 .onTouchGesture(
                     touchBegan: {
                         withAnimation { self.scaleValue = 1.5 }
-                        self.task.isImportant.toggle()
+                        self.task.isImportant!.toggle()
+                        self.toDoLists[self.listIndex].tasks[self.taskIndex].isImportant = self.task.isImportant
+                        
                         do{
                             try self.managedObjectContext.save()
                         }catch{
                             print(error)
                         }
                 },
-                    touchEnd: { _ in withAnimation { self.scaleValue = 1.0 } }
+                    touchEnd: { _ in
+                        withAnimation { self.scaleValue = 1.0  } }
                     
                 )
             

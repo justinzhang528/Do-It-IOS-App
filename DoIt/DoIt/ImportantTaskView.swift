@@ -88,7 +88,7 @@ struct ImportantTaskView: View {
        notifications[0].cancelAllNotifications()
        for list in toDoLists {
           for task in toDoLists[toDoLists.firstIndex(of: list)!].tasks {
-             if (task.isRemind && !task.isCompleted && task.remindAt! > Date()) {
+            if (task.isRemind! && !task.isCompleted! && task.remindAt! > Date()) {
                 notifications[0].addNotification(task: task)
                 notifications[0].scheduleNotifications()
              }
@@ -117,7 +117,7 @@ struct ImportantTaskView: View {
                                 ForEach(self.toDoLists[self.toDoLists.firstIndex(of: number)!].tasks, id: \.self) { index in
                                     Group {
                                         
-                                        if(index.isImportant && self.toDoLists.firstIndex(of: number)! != 3)
+                                        if(index.isImportant! && self.toDoLists.firstIndex(of: number)! != 3)
                                         {
                                             HStack{
                                                 Image(systemName: "circle")
@@ -152,7 +152,7 @@ struct ImportantTaskView: View {
                                                     //根據listview決定actionsheet button的內容
                                                     
                                                 }
-                                                ToDoTaskRow(task: index, title: index.title!, note: index.note!)
+                                                ToDoTaskRow(task: index, listIndex: 1, taskIndex: self.toDoLists[self.toDoLists.firstIndex(of: number)!].tasks.firstIndex(of: index)!, title: index.title!, note: index.note!)
                                             }
                                             .actionSheet(isPresented: self.$showActionSheet) { () -> ActionSheet in
                                                 ActionSheet(title: Text("Choose Action"), buttons: self.actionSheetButtons)
@@ -199,9 +199,14 @@ struct ImportantTaskView: View {
                                     self.isShowFloatingButton = true
                                     if (self.newToDoTask != ""){
                                         let dateComponents = DateComponents(calendar: Calendar.current, year: 2000, month: 1, day: 1)
-                                        let task = Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: dateComponents.date!, dueDate: dateComponents.date!)
-                                        task.isImportant = true
+                                        let task = Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: dateComponents.date!, dueDate: dateComponents.date!, isImportant: true, isRemind: false, isCompleted: false)
                                         self.toDoLists[1].tasks.append(task)
+                                        
+                                        do {
+                                            try self.managedObjectContext.save()
+                                        }catch{
+                                            print(error)
+                                        }
                                         
                                         self.newToDoTask = ""
                                         self.newNote = ""

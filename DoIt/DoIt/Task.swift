@@ -13,9 +13,9 @@ public class Task: NSObject, NSCoding {
     public var title:String?
     public var createdAt:Date?
     public var note:String?
-    public var isImportant:Bool = false
-    public var isCompleted:Bool = false
-    public var isRemind:Bool = false
+    public var isImportant:Bool?
+    public var isCompleted:Bool?
+    public var isRemind:Bool?
     public var remindAt:Date?
     public var dueDate:Date?
     
@@ -30,12 +30,15 @@ public class Task: NSObject, NSCoding {
         case isRemind = "isRemind"
     }
     
-    init(title: String, createdAt: Date, note: String, remindAt: Date, dueDate: Date) {
+    init(title: String, createdAt: Date, note: String, remindAt: Date, dueDate: Date, isImportant: Bool, isRemind: Bool, isCompleted: Bool) {
         self.title = title
         self.createdAt = createdAt
         self.note = note
         self.remindAt = remindAt
         self.dueDate = dueDate
+        self.isImportant = isImportant
+        self.isRemind = isRemind
+        self.isCompleted = isCompleted
     }
     
     public func encode(with coder: NSCoder) {
@@ -55,8 +58,11 @@ public class Task: NSObject, NSCoding {
         let mNote = coder.decodeObject(forKey: Key.note.rawValue) as! String
         let mRemindAt = coder.decodeObject(forKey: Key.remindAt.rawValue) as! Date
         let mDueDate = coder.decodeObject(forKey: Key.dueDate.rawValue) as! Date
+        let mIsImportant = coder.decodeObject(forKey: Key.isImportant.rawValue) as! Bool
+        let mIsRemind = coder.decodeObject(forKey: Key.isRemind.rawValue) as! Bool
+        let mIsCompleted = coder.decodeObject(forKey: Key.isCompleted.rawValue) as! Bool
         
-        self.init(title: mTitle, createdAt: mCreatedAt, note: mNote, remindAt: mRemindAt, dueDate: mDueDate)
+        self.init(title: mTitle, createdAt: mCreatedAt, note: mNote, remindAt: mRemindAt, dueDate: mDueDate, isImportant: mIsImportant, isRemind: mIsRemind, isCompleted: mIsCompleted)
     }
 
 }

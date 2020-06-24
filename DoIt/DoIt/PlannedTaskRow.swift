@@ -13,6 +13,8 @@ struct PlannedTaskRow: View {
     @FetchRequest(fetchRequest: ToDoList.getAlltoDoLists()) var toDoLists: FetchedResults<ToDoList>
     
     var task: Task
+    var listIndex: Int
+    var taskIndex: Int
     
     @State private var scaleValue = CGFloat(1)
     @State var title: String
@@ -29,7 +31,7 @@ struct PlannedTaskRow: View {
                 VStack(alignment: .leading){
                     Text(task.title!).font(.headline)
                     Text("Note: " + task.note!).font(.caption)
-                    if(task.isRemind){
+                    if(task.isRemind!){
                         Text("Remind At: " + "\((CustomDateFormatter().Formatter(date: task.remindAt!, format: "yyyy-MM-dd") == CustomDateFormatter().Formatter(date: Date(), format: "yyyy-MM-dd")) ? "Today " + "\(CustomDateFormatter().Formatter(date: task.remindAt!, format: "HH:mm"))" : CustomDateFormatter().Formatter(date: task.remindAt!, format: "yyyy-MM-dd' 'HH:mm"))").font(.caption)
                     }
                     Text("Due Date: " + "\((CustomDateFormatter().Formatter(date: task.dueDate!, format: "yyyy-MM-dd") == CustomDateFormatter().Formatter(date: Date(), format: "yyyy-MM-dd")) ? "Today" : CustomDateFormatter().Formatter(date: task.dueDate!, format: "yyyy-MM-dd"))").font(.caption)
@@ -37,14 +39,16 @@ struct PlannedTaskRow: View {
             }
             
             Spacer()
-            Image(systemName: task.isImportant ? "star.fill" : "star")
+            Image(systemName: task.isImportant! ? "star.fill" : "star")
                 .resizable()
                 .frame(width: 25, height: 25)
                 .scaleEffect(self.scaleValue)
                 .onTouchGesture(
                     touchBegan: {
                         withAnimation { self.scaleValue = 1.5 }
-                        self.task.isImportant.toggle()
+                        self.task.isImportant!.toggle()
+                        self.toDoLists[self.listIndex].tasks[self.taskIndex].isImportant = self.task.isImportant
+                        
                         do{
                             try self.managedObjectContext.save()
                         }catch{

@@ -151,7 +151,7 @@ struct RemindDatePickerView: View {
       notifications[0].cancelAllNotifications()
       for list in toDoLists {
          for task in toDoLists[toDoLists.firstIndex(of: list)!].tasks {
-            if (task.isRemind && !task.isCompleted && task.remindAt! > Date()) {
+            if (task.isRemind! && !task.isCompleted! && task.remindAt! > Date()) {
                notifications[0].addNotification(task: task)
                notifications[0].scheduleNotifications()
             }
@@ -185,7 +185,12 @@ struct RemindDatePickerView: View {
              self.isShowRemindDate.toggle()
             self.UpdateNotificationSchedule()
             
-             
+             do {
+                 try self.managedObjectContext.save()
+             }catch{
+                 print(error)
+             }
+            
           }) {
               
               Text("Done").font(.headline)
@@ -202,6 +207,7 @@ struct RemindDatePickerView: View {
 }
 
 struct DueDatePickerView: View {
+   @Environment(\.managedObjectContext) var managedObjectContext
    
    @State private var date: Date = Date()
    @Binding var isShowDueDate: Bool
@@ -232,6 +238,12 @@ struct DueDatePickerView: View {
            self.task.dueDate = self.date
             self.isShowDueDate.toggle()
             
+            do {
+                try self.managedObjectContext.save()
+            }catch{
+                print(error)
+            }
+            
          }) {
              
              Text("Done").font(.headline)
@@ -248,6 +260,7 @@ struct DueDatePickerView: View {
 }
 
 struct EditNoteView: View {
+   @Environment(\.managedObjectContext) var managedObjectContext
    
    @State var note: String
    @Binding var isShowEditNote: Bool
@@ -278,6 +291,12 @@ struct EditNoteView: View {
            self.task.note = self.note
             self.isShowEditNote.toggle()
             UIApplication.shared.endEditing()
+            
+            do {
+                try self.managedObjectContext.save()
+            }catch{
+                print(error)
+            }
             
          }) {
              
