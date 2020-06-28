@@ -10,6 +10,9 @@ import SwiftUI
 
 struct PomodoroView: View {
     @EnvironmentObject var timerState: TimerState
+    
+    
+    
     var body: some View {
         NavigationView{
             VStack(spacing: 100.0){

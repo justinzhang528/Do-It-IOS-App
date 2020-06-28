@@ -9,14 +9,12 @@
 import SwiftUI
 
 struct PomodoroCircleView: View {
-    //@EnvironmentObject var timerState: TimerState
     
-    //@State var percentage: CGFloat = 0
     var body: some View {
         ZStack{
-            //Track()
+            Track()
+            Outline()
             ClockView()
-            //Outline(percentage: percentage)
             
         }
         .frame(width: 250, height: 250)
@@ -24,62 +22,47 @@ struct PomodoroCircleView: View {
 }
 
 struct Outline: View{
-    var percentage: CGFloat = 50
+    @EnvironmentObject var timerState: TimerState
+    @State var percentage: CGFloat = 0
+    
+    let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
     
     var body: some View {
         ZStack{
             Circle()
                 .fill(Color.clear)
-                .frame(width:250, height: 250)
+                .frame(width: 250, height: 250)
                 .overlay(
-                    Circle()
-                        .trim(from: 0, to: percentage * 0.01)
-                        .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
-                        .fill(AngularGradient(gradient: .init(colors: [ Color.blue]),center: .center, startAngle: .zero, endAngle: .init(degrees: 360)))
-            ).animation(.spring(response: 2.0, dampingFraction: 1.0, blendDuration: 1.0))
+                    Circle().trim(from:0, to: percentage)
+                        .stroke(
+                            style: StrokeStyle(
+                                lineWidth: 15,
+                                lineCap: .round,
+                                lineJoin:.round
+                            )
+                    )
+                        .foregroundColor(
+                            Color.blue
+                    ).animation(
+                        .easeInOut(duration: 0.2)
+                    )
+            )
+        }
+        .onReceive(timer){ time in
+            self.percentage = CGFloat(self.timerState.progress)
+            print("\(self.percentage)")
         }
     }
 }
 
 struct Track: View{
     var body: some View{
-        ZStack{
-            Circle()
-                .fill(Color.white)
-                .frame(width:250, height: 250)
+        Circle()
+            .fill(Color.clear)
+            .frame(width: 250, height: 250)
             .overlay(
-                    Circle()
-                        .stroke(style: StrokeStyle(lineWidth: 3))
-                        .fill(AngularGradient(gradient: .init(colors: [Color.gray]), center: .center))
-            )
-        }
+                Circle().stroke(Color.gray, lineWidth: 15)
+        )
     }
 }
 
-struct CircleShape: Shape{
-    var progress: Double
-    
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        
-        let radius = rect.width / 2
-        
-        let start: Double = -90
-        let end: Double = -90 + 360 * progress
-        
-        path.addArc(
-            center: CGPoint(x: radius, y: radius),
-            radius: radius,
-            startAngle: .degrees(start),
-            endAngle:.degrees(end),
-            clockwise: false
-        )
-        
-        return path
-    }
-}
-struct PomodoroCircleView_Previews: PreviewProvider {
-    static var previews: some View {
-        PomodoroCircleView()
-    }
-}

@@ -11,7 +11,7 @@ import SwiftUI
 struct ClockView: View {
     @EnvironmentObject var timerState: TimerState
     
-    @State var clockString: String = "25:00"
+    @State var clockString: String = "00:30"
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -25,7 +25,7 @@ struct ClockView: View {
                     secondsElapsed = now.timeIntervalSince1970 - startTime.timeIntervalSince1970
                 }
                 
-                let totalMinutes: Double = 25
+                let totalMinutes: Double = 0.5
                 let secondsRemaining = totalMinutes * 60 - secondsElapsed
                 
                 let minutes = Int(secondsRemaining / 60)
