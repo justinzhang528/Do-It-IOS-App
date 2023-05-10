@@ -30,7 +30,7 @@ struct CompletedTaskView: View {
     
     //刪除
     func delete() {
-        self.toDoLists[3].tasks.remove(at: deleteIndex)
+        self.toDoLists[4].tasks.remove(at: deleteIndex)
         
         do{
             try self.managedObjectContext.save()
@@ -40,39 +40,38 @@ struct CompletedTaskView: View {
     }
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                
-                GeometryReader { geo in
-                    Image("Completed")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                }
-                
-                VStack {
-                    
-                    List {
-                        ForEach(self.toDoLists[3].tasks, id: \.self) { index in
-                            CompletedTaskRow(task: index)
-                        }.onDelete { indexSet in
-                                self.SetDeleteIndex(at: indexSet) //點擊刪除時的動作
-                        }
-                    }
-                        
-                    //是否顯示刪除對話框
-                    .alert(isPresented: $showConfirm) {
-                        Alert(title: Text("\(toDoLists[3].tasks[self.deleteIndex].title!)"), message: Text("Are you sure to delete the task?"),
-                                  primaryButton: .cancel(),
-                                  secondaryButton: .destructive(Text("Delete")) {
-                                    self.delete()
-                                })
-                    }
-                }
-                
+
+        ZStack {
+            
+            GeometryReader { geo in
+                Image("Completed")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
             }
-            .navigationBarTitle(Text(self.navigationTitle), displayMode: .inline)
-            .navigationBarItems(trailing: EditButton())
+            
+            VStack {
+                
+                List {
+                    ForEach(self.toDoLists[4].tasks, id: \.self) { index in
+                        CompletedTaskRow(task: index)
+                    }.onDelete { indexSet in
+                            self.SetDeleteIndex(at: indexSet) //點擊刪除時的動作
+                    }
+                }
+                    
+                //是否顯示刪除對話框
+                .alert(isPresented: $showConfirm) {
+                    Alert(title: Text("\(toDoLists[4].tasks[self.deleteIndex].title!)"), message: Text("Are you sure to delete the task?"),
+                              primaryButton: .cancel(),
+                              secondaryButton: .destructive(Text("Delete")) {
+                                self.delete()
+                            })
+                }
+            }
+            
         }
+        .navigationBarTitle(Text(self.navigationTitle), displayMode: .inline)
+        .navigationBarItems(trailing: EditButton())
     }
 }
 

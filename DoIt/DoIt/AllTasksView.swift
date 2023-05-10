@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct PlannedTaskView: View {
+struct AllTasksView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(fetchRequest: ToDoList.getAlltoDoLists()) var toDoLists: FetchedResults<ToDoList>
@@ -120,7 +120,7 @@ struct PlannedTaskView: View {
         ZStack {
             
             GeometryReader { geo in
-                Image("Planned")
+                Image("AllTasks")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             }
@@ -133,7 +133,7 @@ struct PlannedTaskView: View {
                             ForEach(self.toDoLists[self.toDoLists.firstIndex(of: number)!].tasks, id: \.self) { index in
                                 Group {
                                     
-                                    if((CustomDateFormatter().Formatter(date: index.dueDate!, format: "yyyy-MM-dd") != "2000-01-01") && self.toDoLists.firstIndex(of: number)! != 4)
+                                    if(self.toDoLists.firstIndex(of: number)! != 4)
                                     {
                                         HStack{
                                             
@@ -217,8 +217,9 @@ struct PlannedTaskView: View {
                                 self.isShowTextField = false
                                 self.isShowFloatingButton = true
                                 if (self.newToDoTask != ""){
-                                    let task = Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: Date(), dueDate: Date(), isImportant: false, isRemind: false, isCompleted: false)
-                                    self.toDoLists[2].tasks.append(task)
+                                    let dateComponents = DateComponents(calendar: Calendar.current, year: 2000, month: 1, day: 1)
+                                    let task = Task(title: self.newToDoTask, createdAt: Date(), note: self.newNote, remindAt: dateComponents.date!, dueDate: dateComponents.date!, isImportant: false, isRemind: false, isCompleted: false)
+                                    self.toDoLists[3].tasks.append(task)
                                     
                                     do {
                                         try self.managedObjectContext.save()

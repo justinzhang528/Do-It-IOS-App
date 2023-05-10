@@ -8,16 +8,20 @@
 
 import SwiftUI
 
-struct ToDoTaskRow: View {
+struct MyDayTaskRow: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(fetchRequest: ToDoList.getAlltoDoLists()) var toDoLists: FetchedResults<ToDoList>
     
-    var task: Task
+    var task: Task    
     var listIndex: Int
     var taskIndex: Int
+    
+    @State private var scaleValue = CGFloat(1)
     @State var title: String
     @State var note: String
-    @State private var scaleValue = CGFloat(1)
+    @State var isRemind: Bool
+    @State var remindAt: Date
+    @State var dueDate: Date
     
     func updateContext(){
        for list in self.toDoLists{
@@ -30,7 +34,7 @@ struct ToDoTaskRow: View {
               try self.managedObjectContext.save()
           }catch{
               print(error)
-          }          
+          }
           
        }
     }
@@ -40,7 +44,7 @@ struct ToDoTaskRow: View {
         HStack{
             
             NavigationLink(destination: TaskOptionView(task: self.task, listIndex: self.listIndex, taskIndex: self.taskIndex)){
-                    VStack(alignment: .leading, spacing: 5){
+                VStack(alignment: .leading, spacing: 5){
                     Text(task.title!).font(.headline)
                     if(task.note != ""){
                         HStack(alignment: .top){
@@ -53,12 +57,6 @@ struct ToDoTaskRow: View {
                         HStack{
                             Image(systemName: "bell").fixedSize()
                             Text("Remind At: " + "\((CustomDateFormatter().Formatter(date: task.remindAt!, format: "yyyy-MM-dd") == CustomDateFormatter().Formatter(date: Date(), format: "yyyy-MM-dd")) ? "Today " + "\(CustomDateFormatter().Formatter(date: task.remindAt!, format: "HH:mm"))" : CustomDateFormatter().Formatter(date: task.remindAt!, format: "yyyy-MM-dd' 'HH:mm"))").font(.caption)
-                        }
-                    }
-                    if((CustomDateFormatter().Formatter(date: task.dueDate!, format: "yyyy-MM-dd") != "2000-01-01")){
-                        HStack{
-                            Image(systemName: "calendar").fixedSize()
-                            Text("Due Date: " + "\((CustomDateFormatter().Formatter(date: task.dueDate!, format: "yyyy-MM-dd") == CustomDateFormatter().Formatter(date: Date(), format: "yyyy-MM-dd")) ? "Today" : CustomDateFormatter().Formatter(date: task.dueDate!, format: "yyyy-MM-dd"))").font(.caption)
                         }
                     }
                 }
@@ -75,8 +73,7 @@ struct ToDoTaskRow: View {
                         self.task.isImportant!.toggle()
                         self.updateContext()
                 },
-                    touchEnd: { _ in
-                        withAnimation { self.scaleValue = 1.0  } }
+                    touchEnd: { _ in withAnimation { self.scaleValue = 1.0 } }
                     
                 )
             
@@ -90,3 +87,4 @@ struct ToDoTaskRow: View {
         ToDoTaskRow()
     }
 }*/
+

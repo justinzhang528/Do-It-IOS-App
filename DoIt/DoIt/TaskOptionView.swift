@@ -11,14 +11,14 @@ import SwiftUI
 struct TaskOptionView: View {
     
    var task: Task
+   var listIndex: Int
+   var taskIndex: Int
    @State private var isShowRemindDate = false
    @State private var isShowDueDate = false
    @State private var isShowEditNote = false   
    @State private var value : CGFloat = 0
     
     var body: some View {
-      
-        NavigationView {
          
          ZStack {
             
@@ -33,7 +33,7 @@ struct TaskOptionView: View {
                    HStack {
                        Image(systemName: "bell")
                         .resizable()
-                        .fixedSize()
+                        .frame(width:30, height:30)
                        Text("Remind Me")
                      Spacer()
                    }.onTapGesture {
@@ -43,26 +43,29 @@ struct TaskOptionView: View {
                    HStack {
                        Image(systemName: "calendar")
                         .resizable()
-                        .fixedSize()
+                        .frame(width:30, height:30)
                        Text("Set Due Date")
                    }.onTapGesture {
                    self.isShowDueDate.toggle()
                }
+               
                    
                    HStack {
-                       Image(systemName: "clock")
+                       Image(systemName: "doc.on.clipboard")
                         .resizable()
-                        .fixedSize()
-                       Text("Pomodoro")
-                   }
-                   
-                   HStack {
-                       Image(systemName: "doc.text")
-                        .resizable()
-                        .fixedSize()
+                        .frame(width:30, height:35)
                        Text("Edit Note")
                    }.onTapGesture {
                    self.isShowEditNote.toggle()
+               }
+                   
+               NavigationLink(destination: TimerView(listIndex: self.listIndex, taskIndex: self.taskIndex).environmentObject(TimerState())) {
+                  HStack {
+                      Image(systemName: "clock")
+                       .resizable()
+                       .frame(width:30, height:30)
+                      Text("Pomodoro")
+                  }.foregroundColor(Color.black)
                }
                   
                   Spacer()
@@ -114,7 +117,7 @@ struct TaskOptionView: View {
             }.background(Color(UIColor.label.withAlphaComponent(self.isShowEditNote ? 0.2 : 0)).edgesIgnoringSafeArea(.all))
             
             
-         }.background(Color("Color1").edgesIgnoringSafeArea(.all))
+         }
          .animation(.spring())
             .offset(y: -self.value)
          .onAppear {
@@ -130,8 +133,6 @@ struct TaskOptionView: View {
                  }
          }
          
-         
-        }
       
     }
    
@@ -156,6 +157,22 @@ struct RemindDatePickerView: View {
                notifications[0].scheduleNotifications()
             }
          }
+      }
+   }
+   
+   func updateContext(){
+      for list in self.toDoLists{
+         let index: Int = self.toDoLists.firstIndex(of: list) ?? 0
+         self.toDoLists[index].tasks.append(Task(title: "...", createdAt: Date(), note: "", remindAt: Date(), dueDate: Date(), isImportant: false, isRemind: false, isCompleted: false))
+       
+         self.toDoLists[index].tasks.remove(at: (self.toDoLists[index].tasks.count - 1))
+         
+         do {
+             try self.managedObjectContext.save()
+         }catch{
+             print(error)
+         }
+         
       }
    }
    
@@ -184,6 +201,7 @@ struct RemindDatePickerView: View {
             self.task.isRemind = true
              self.isShowRemindDate.toggle()
             self.UpdateNotificationSchedule()
+            self.updateContext()
             
              do {
                  try self.managedObjectContext.save()
@@ -208,10 +226,27 @@ struct RemindDatePickerView: View {
 
 struct DueDatePickerView: View {
    @Environment(\.managedObjectContext) var managedObjectContext
+   @FetchRequest(fetchRequest: ToDoList.getAlltoDoLists()) var toDoLists: FetchedResults<ToDoList>
    
    @State private var date: Date = Date()
    @Binding var isShowDueDate: Bool
    var task: Task
+   
+   func updateContext(){
+      for list in self.toDoLists{
+         let index: Int = self.toDoLists.firstIndex(of: list) ?? 0
+         self.toDoLists[index].tasks.append(Task(title: "...", createdAt: Date(), note: "", remindAt: Date(), dueDate: Date(), isImportant: false, isRemind: false, isCompleted: false))
+       
+         self.toDoLists[index].tasks.remove(at: (self.toDoLists[index].tasks.count - 1))
+         
+         do {
+             try self.managedObjectContext.save()
+         }catch{
+             print(error)
+         }
+         
+      }
+   }
    
    
    var body : some View{
@@ -237,6 +272,7 @@ struct DueDatePickerView: View {
          Button(action: {
            self.task.dueDate = self.date
             self.isShowDueDate.toggle()
+            self.updateContext()
             
             do {
                 try self.managedObjectContext.save()
@@ -261,11 +297,27 @@ struct DueDatePickerView: View {
 
 struct EditNoteView: View {
    @Environment(\.managedObjectContext) var managedObjectContext
+   @FetchRequest(fetchRequest: ToDoList.getAlltoDoLists()) var toDoLists: FetchedResults<ToDoList>
    
    @State var note: String
    @Binding var isShowEditNote: Bool
    var task: Task
      
+   func updateContext(){
+      for list in self.toDoLists{
+         let index: Int = self.toDoLists.firstIndex(of: list) ?? 0
+         self.toDoLists[index].tasks.append(Task(title: "...", createdAt: Date(), note: "", remindAt: Date(), dueDate: Date(), isImportant: false, isRemind: false, isCompleted: false))
+       
+         self.toDoLists[index].tasks.remove(at: (self.toDoLists[index].tasks.count - 1))
+         
+         do {
+             try self.managedObjectContext.save()
+         }catch{
+             print(error)
+         }
+         
+      }
+   }
    
    var body : some View{
            
@@ -291,6 +343,7 @@ struct EditNoteView: View {
            self.task.note = self.note
             self.isShowEditNote.toggle()
             UIApplication.shared.endEditing()
+            self.updateContext()
             
             do {
                 try self.managedObjectContext.save()

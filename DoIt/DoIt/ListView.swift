@@ -43,6 +43,9 @@ struct ListView: View {
         let completedList = ToDoList(context: self.managedObjectContext)
         completedList.title = "Completed"
         completedList.createdAt = Date()
+        let allList = ToDoList(context: self.managedObjectContext)
+        allList.title = "All"
+        completedList.createdAt = Date()
         do {
             try self.managedObjectContext.save()
         }catch{
@@ -169,6 +172,21 @@ struct ListView: View {
                             }
                             .background(RoundedRectangle(cornerRadius: 40).fill(Color(#colorLiteral(red: 0.5823103189, green: 0.916143477, blue: 0.6088748574, alpha: 1))))
                         }
+                    
+                        NavigationLink(destination: AllTasksView(navigationTitle: "All Tasks")) {
+                            HStack {
+                                Spacer().frame(width: 15, height: 50, alignment: .topLeading)
+                                Image(systemName: "square.stack.3d.up.fill")
+                                .resizable()
+                                .fixedSize()
+                                .foregroundColor(Color(#colorLiteral(red: 0.09277070314, green: 0.4774955511, blue: 0.165184021, alpha: 1)))
+                                HStack {
+                                    Text("All Tasks").font(.headline)
+                                }
+                                Spacer()
+                            }
+                            .background(RoundedRectangle(cornerRadius: 40).fill(Color(#colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 0.9))))
+                        }
                         
                         NavigationLink(destination: CompletedTaskView(navigationTitle: "Completed")) {
                             HStack {
@@ -191,7 +209,7 @@ struct ListView: View {
                                 ForEach(self.toDoLists) { (list) in
                                     
                                     //不顯示前四個DefaultList
-                                    if(self.toDoLists.firstIndex(of: list)! > 3){
+                                    if(self.toDoLists.firstIndex(of: list)! > 4){
                                         HStack {
                                             Image(systemName: "list.dash")
                                             .resizable()
@@ -314,6 +332,8 @@ struct ListView: View {
                 .offset(y: -self.value)
                     .animation(.default)
                     .onAppear {
+                        self.isShowTextField = false
+                        self.isShowFloatingButton = true
                         
                         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main){ (noti) in
                             guard let value = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
